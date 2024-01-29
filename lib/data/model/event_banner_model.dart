@@ -1,11 +1,11 @@
-class Banner {
+class EventBanner {
   final String? eventId;
   final String? eventTitle;
   final String? eventDescription;
   final String? eventImage;
   final String? eventUrl;
 
-  Banner({
+  EventBanner({
     this.eventId,
     this.eventTitle,
     this.eventDescription,
@@ -13,7 +13,7 @@ class Banner {
     this.eventUrl,
   });
 
-  factory Banner.fromJson(Map<String, dynamic> json) => Banner(
+  factory EventBanner.fromJson(Map<String, dynamic> json) => EventBanner(
         eventId: json["event_id"],
         eventTitle: json["event_title"],
         eventDescription: json["event_description"],

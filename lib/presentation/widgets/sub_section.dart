@@ -6,8 +6,6 @@ class SubSection extends StatelessWidget {
   final Widget child;
   final double? horizontalTitlePadding;
   final double? verticalTitlePadding;
-  final double? horizontalChildPadding;
-  final double? verticalChildPadding;
 
   const SubSection({
     super.key,
@@ -16,8 +14,6 @@ class SubSection extends StatelessWidget {
     required this.child,
     this.horizontalTitlePadding,
     this.verticalTitlePadding,
-    this.horizontalChildPadding,
-    this.verticalChildPadding,
   });
 
   @override
@@ -43,13 +39,7 @@ class SubSection extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalChildPadding ?? 0,
-            vertical: verticalChildPadding ?? 0,
-          ),
-          child: child,
-        ),
+        child,
       ],
     );
   }

@@ -8,7 +8,7 @@ final class BannersInitial extends BannersState {}
 final class BannersLoading extends BannersState {}
 
 final class BannersSuccess extends BannersState {
-  final List<Banner> banners;
+  final List<EventBanner> banners;
   BannersSuccess({required this.banners});
 }
 

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:edspert_advance_flutter_final_project_elearning/data/model/banner_model.dart';
+import 'package:edspert_advance_flutter_final_project_elearning/data/model/event_banner_model.dart';
 import 'package:edspert_advance_flutter_final_project_elearning/domain/repository/banner_repository.dart';
 
 import '../../common/constants/urls.dart';
@@ -10,7 +10,7 @@ import '../model/response_model.dart';
 
 class BannerRepositoryImpl implements BannerRepository {
   @override
-  Future<List<Banner>> getBanners({required int limit}) async {
+  Future<List<EventBanner>> getBanners({required int limit}) async {
     try {
       final response = await HttpConfig.dioConfig().get(
         Urls.banners,
@@ -20,12 +20,12 @@ class BannerRepositoryImpl implements BannerRepository {
       );
 
       if (response.statusCode == 200) {
-        ResponseModel<List<Banner>> responseModel =
-            ResponseModel<List<Banner>>.fromJson(
+        ResponseModel<List<EventBanner>> responseModel =
+            ResponseModel<List<EventBanner>>.fromJson(
           json: response.data,
           toJsonData: (data) => data.map((e) => e.toJson()),
           fromJsonData: (data) =>
-              List.from(data).map((e) => Banner.fromJson(e)).toList(),
+              List.from(data).map((e) => EventBanner.fromJson(e)).toList(),
         );
         return responseModel.data ?? [];
       }

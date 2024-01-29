@@ -1,5 +1,5 @@
 class Course {
-  final String? courseId;
+  final String courseId;
   final String? majorName;
   final String? courseCategory;
   final String? courseName;
@@ -9,7 +9,7 @@ class Course {
   final int? progress;
 
   Course({
-    this.courseId,
+    required this.courseId,
     this.majorName,
     this.courseCategory,
     this.courseName,

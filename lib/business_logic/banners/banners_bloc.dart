@@ -2,7 +2,7 @@ import 'package:edspert_advance_flutter_final_project_elearning/data/repository/
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/model/banner_model.dart';
+import '../../data/model/event_banner_model.dart';
 
 part 'banners_event.dart';
 part 'banners_state.dart';
