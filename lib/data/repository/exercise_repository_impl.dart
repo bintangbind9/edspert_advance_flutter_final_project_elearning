@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:edspert_advance_flutter_final_project_elearning/data/model/exercise_model.dart';
+import 'package:edspert_advance_flutter_final_project_elearning/data/model/response_model.dart';
 import 'package:edspert_advance_flutter_final_project_elearning/domain/repository/exercise_repository.dart';
 
 import '../../common/constants/urls.dart';
@@ -9,7 +10,7 @@ import '../../common/http/http_config.dart';
 
 class ExerciseRepositoryImpl implements ExerciseRepository {
   @override
-  Future<ExerciseResponse> getExercisesByCourseIdAndEmail({
+  Future<ResponseModel<List<Exercise>>> getExercisesByCourseIdAndEmail({
     required String courseId,
     required String email,
   }) async {
@@ -23,9 +24,18 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
       );
 
       if (response.statusCode == 200) {
-        ExerciseResponse exerciseResponse =
-            ExerciseResponse.fromJson(response.data);
-        return exerciseResponse;
+        final responseJson = response.data;
+
+        ResponseModel<List<Exercise>> responseModel =
+            ResponseModel<List<Exercise>>.fromJson(
+          json: responseJson,
+          toJsonData: (data) => data.map((e) => e.toJson()),
+          fromJsonData: (data) => responseJson['data'] == null
+              ? []
+              : List.from(data.map((e) => Exercise.fromJson(e))),
+        );
+
+        return responseModel;
       }
 
       throw Exception('Status Code not 200');

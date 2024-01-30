@@ -20,13 +20,17 @@ class BannerRepositoryImpl implements BannerRepository {
       );
 
       if (response.statusCode == 200) {
+        final responseJson = response.data;
+
         ResponseModel<List<EventBanner>> responseModel =
             ResponseModel<List<EventBanner>>.fromJson(
-          json: response.data,
+          json: responseJson,
           toJsonData: (data) => data.map((e) => e.toJson()),
-          fromJsonData: (data) =>
-              List.from(data).map((e) => EventBanner.fromJson(e)).toList(),
+          fromJsonData: (data) => responseJson['data'] == null
+              ? []
+              : List.from(data.map((e) => EventBanner.fromJson(e))),
         );
+
         return responseModel.data ?? [];
       }
 

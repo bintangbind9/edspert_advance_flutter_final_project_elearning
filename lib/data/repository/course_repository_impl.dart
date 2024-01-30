@@ -24,13 +24,17 @@ class CourseRepositoryImpl implements CourseRepository {
       );
 
       if (response.statusCode == 200) {
+        final responseJson = response.data;
+
         ResponseModel<List<Course>> responseModel =
             ResponseModel<List<Course>>.fromJson(
-          json: response.data,
+          json: responseJson,
           toJsonData: (data) => data.map((e) => e.toJson()),
-          fromJsonData: (data) =>
-              List.from(data).map((e) => Course.fromJson(e)).toList(),
+          fromJsonData: (data) => responseJson['data'] == null
+              ? []
+              : List.from(data.map((e) => Course.fromJson(e))),
         );
+
         return responseModel.data ?? [];
       }
 

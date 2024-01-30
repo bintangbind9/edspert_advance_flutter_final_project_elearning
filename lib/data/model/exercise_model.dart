@@ -1,33 +1,3 @@
-class ExerciseResponse {
-  final int? status;
-  final String? message;
-  final List<Exercise>? data;
-
-  ExerciseResponse({
-    this.status,
-    this.message,
-    this.data,
-  });
-
-  factory ExerciseResponse.fromJson(Map<String, dynamic> json) =>
-      ExerciseResponse(
-        status: json["status"],
-        message: json["message"],
-        data: json["data"] == null
-            ? []
-            : List<Exercise>.from(
-                json["data"]!.map((x) => Exercise.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "message": message,
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
-}
-
 class Exercise {
   final String? exerciseId;
   final String? exerciseTitle;
