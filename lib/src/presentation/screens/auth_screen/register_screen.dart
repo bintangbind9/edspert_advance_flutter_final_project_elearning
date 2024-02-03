@@ -4,9 +4,14 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/general_values.dart';
 import '../../widgets/register_button.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  final String email;
+  const RegisterScreen({
+    Key? key,
+    required this.email,
+  }) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterPageState();
@@ -25,6 +30,20 @@ class _RegisterPageState extends State<RegisterScreen> {
   bool isAllValid = false;
 
   @override
+  void initState() {
+    _emailTextController.text = widget.email;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailTextController.dispose();
+    _fullNameTextController.dispose();
+    _schoolNameTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -37,7 +56,12 @@ class _RegisterPageState extends State<RegisterScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.grayscaleOffWhite,
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            ),
             color: Colors.black,
             icon: const Icon(Icons.arrow_back),
           ),
@@ -143,6 +167,7 @@ class _RegisterPageState extends State<RegisterScreen> {
                         child: Text(
                           GeneralValues.genderM,
                           textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: jenisKelamin == GeneralValues.genderM
                                 ? Colors.white
@@ -164,7 +189,9 @@ class _RegisterPageState extends State<RegisterScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 35),
+                          vertical: 12,
+                          horizontal: 35,
+                        ),
                         decoration: BoxDecoration(
                           color: jenisKelamin == GeneralValues.genderF
                               ? Colors.green
@@ -178,6 +205,7 @@ class _RegisterPageState extends State<RegisterScreen> {
                         child: Text(
                           GeneralValues.genderF,
                           textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: jenisKelamin == GeneralValues.genderF
                                 ? Colors.white

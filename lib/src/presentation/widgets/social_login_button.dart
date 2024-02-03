@@ -33,10 +33,13 @@ class SocialLoginButton extends StatelessWidget {
           children: [
             Image.asset(logo),
             const SizedBox(width: 12),
-            Text(
-              text,
-              style: TextStyle(
-                color: foregroundColor,
+            Expanded(
+              child: Text(
+                text,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: foregroundColor,
+                ),
               ),
             ),
           ],

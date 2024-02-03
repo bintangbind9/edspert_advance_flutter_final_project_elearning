@@ -80,7 +80,7 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
                   itemCount: state.exercises.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 1.4,
+                    childAspectRatio: 20 / 16,
                     mainAxisSpacing: Styles.mainPadding,
                     crossAxisSpacing: Styles.mainPadding,
                   ),

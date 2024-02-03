@@ -26,7 +26,7 @@ class TopBannerHomeScreen extends StatelessWidget {
               child: const Text(
                 'Mau kerjain latihan soal apa hari ini?',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.grayscaleOffWhite,
                 ),

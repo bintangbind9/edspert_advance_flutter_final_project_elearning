@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../common/constants/app_colors.dart';
+import '../data/firebase/firebase_service.dart';
+import '../data/repositories/auth_repository_impl.dart';
 import '../data/repositories/banner_repository_impl.dart';
 import '../data/repositories/course_repository_impl.dart';
 import '../data/repositories/exercise_repository_impl.dart';
 import '../domain/usecases/get_banners_usecase.dart';
 import '../domain/usecases/get_courses_usecase.dart';
 import '../domain/usecases/get_exercises_usecase.dart';
+import '../domain/usecases/sign_in_google_usecase.dart';
+import 'bloc/auth/auth_bloc.dart';
 import 'bloc/banners/banners_bloc.dart';
 import 'bloc/base_screen_index/base_screen_index_bloc.dart';
 import 'bloc/courses/courses_bloc.dart';
@@ -23,6 +27,15 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => BaseScreenIndexBloc(),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(
+            signInWithGoogleUsecase: SignInWithGoogleUsecase(
+              repository: AuthRepositoryImpl(
+                firebaseService: FirebaseService(),
+              ),
+            ),
+          ),
         ),
         BlocProvider(
           create: (context) => CoursesBloc(

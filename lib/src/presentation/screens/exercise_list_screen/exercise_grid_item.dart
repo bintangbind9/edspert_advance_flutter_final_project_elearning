@@ -63,6 +63,7 @@ class ExerciseGridItem extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
