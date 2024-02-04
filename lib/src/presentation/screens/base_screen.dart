@@ -5,7 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/asset_images.dart';
 import '../../common/constants/general_values.dart';
+import '../../domain/entities/user_model/user_model.dart';
 import '../bloc/base_screen_index/base_screen_index_bloc.dart';
+import '../bloc/user/user_bloc.dart';
 import 'discussion_screen.dart';
 import 'home_screen/home_screen.dart';
 import 'profile_screen.dart';
@@ -16,9 +18,16 @@ class BaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> baseScreen = [
-      const HomeScreen(
-        majorName: GeneralValues.majorName,
-        email: GeneralValues.testingEmail,
+      BlocBuilder<UserBloc, UserState>(
+        buildWhen: (previous, current) =>
+            (previous is GetUserAppLoading && current is GetUserAppSuccess),
+        builder: (context, state) {
+          return HomeScreen(
+            majorName: GeneralValues.majorName,
+            userModel:
+                state is GetUserAppSuccess ? state.userModel : UserModel(),
+          );
+        },
       ),
       const ProfileScreen(),
     ];

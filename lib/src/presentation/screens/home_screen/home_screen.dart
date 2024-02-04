@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/constants/asset_images.dart';
 import '../../../common/constants/general_values.dart';
+import '../../../domain/entities/user_model/user_model.dart';
 import '../../bloc/banners/banners_bloc.dart';
 import '../../bloc/courses/courses_bloc.dart';
 import 'banner_list_home_screen.dart';
@@ -12,11 +13,11 @@ import 'top_banner_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String majorName;
-  final String email;
+  final UserModel userModel;
   const HomeScreen({
     super.key,
     required this.majorName,
-    required this.email,
+    required this.userModel,
   });
 
   @override
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<CoursesBloc>().add(
               GetCoursesEvent(
                 majorName: widget.majorName,
-                email: widget.email,
+                email: widget.userModel.userEmail!,
               ),
             );
 
