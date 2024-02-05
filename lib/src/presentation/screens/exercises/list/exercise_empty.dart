@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../common/constants/app_colors.dart';
-import '../../../common/constants/asset_images.dart';
+import '../../../../common/constants/app_colors.dart';
+import '../../../../common/constants/asset_images.dart';
 
 class ExerciseEmpty extends StatelessWidget {
   const ExerciseEmpty({super.key});

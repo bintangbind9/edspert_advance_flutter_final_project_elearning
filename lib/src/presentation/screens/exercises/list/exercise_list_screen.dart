@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/constants/app_colors.dart';
-import '../../../common/constants/styles.dart';
-import '../../../domain/entities/exercise_model.dart';
-import '../../bloc/exercises/exercises_bloc.dart';
-import '../../widgets/sub_section.dart';
+import '../../../../common/constants/app_colors.dart';
+import '../../../../common/constants/styles.dart';
+import '../../../../domain/entities/exercise_model.dart';
+import '../../../bloc/exercises/exercises_bloc.dart';
+import '../../../widgets/sub_section.dart';
 import 'exercise_empty.dart';
 import 'exercise_grid_item.dart';
 

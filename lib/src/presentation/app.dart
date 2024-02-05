@@ -12,6 +12,7 @@ import '../data/repositories/user_repository_impl.dart';
 import '../domain/usecases/get_banners_usecase.dart';
 import '../domain/usecases/get_courses_usecase.dart';
 import '../domain/usecases/get_exercises_usecase.dart';
+import '../domain/usecases/get_questions_usecase.dart';
 import '../domain/usecases/get_user_by_email_usecase.dart';
 import '../domain/usecases/register_user_usecase.dart';
 import '../domain/usecases/sign_in_google_usecase.dart';
@@ -20,6 +21,7 @@ import 'bloc/banners/banners_bloc.dart';
 import 'bloc/base_screen_index/base_screen_index_bloc.dart';
 import 'bloc/courses/courses_bloc.dart';
 import 'bloc/exercises/exercises_bloc.dart';
+import 'bloc/questions/questions_bloc.dart';
 import 'bloc/user/user_bloc.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/auth_screen/register_screen.dart';
@@ -70,6 +72,13 @@ class App extends StatelessWidget {
             ),
             getUserByEmailUsecase: GetUserByEmailUsecase(
               repository: UserRepositoryImpl(),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => QuestionsBloc(
+            getQuestionsUsecase: GetQuestionsUsecase(
+              repository: CourseRepositoryImpl(),
             ),
           ),
         ),

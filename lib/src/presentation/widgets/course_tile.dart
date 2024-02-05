@@ -4,7 +4,7 @@ import '../../common/constants/app_colors.dart';
 import '../../common/constants/asset_images.dart';
 import '../../common/constants/general_values.dart';
 import '../../domain/entities/course_model.dart';
-import '../screens/exercise_list_screen/exercise_list_screen.dart';
+import '../screens/exercises/list/exercise_list_screen.dart';
 
 class CourseTile extends StatelessWidget {
   final Course course;
