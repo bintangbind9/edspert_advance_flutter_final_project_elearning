@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/general_values.dart';
@@ -12,6 +13,7 @@ import '../../../../domain/usecases/get_questions_usecase.dart';
 import '../../../bloc/bloc/question_answer_bloc.dart';
 import '../../../bloc/question_index/question_index_bloc.dart';
 import '../../../bloc/questions/questions_bloc.dart';
+import '../../../widgets/common_button.dart';
 import '../../../widgets/simple_error_widget.dart';
 import 'answer_option_widget.dart';
 import 'questions_index_widget.dart';
@@ -61,13 +63,14 @@ class _ExerciseQuestionsScreenState extends State<ExerciseQuestionsScreen> {
               current is GetQuestionsInternalError),
       listener: (context, state) {
         if (state is GetQuestionsSuccess) {
-          List<QuestionAnswer> questionAnswers = [];
-          for (Question question in state.questions) {
-            questionAnswers.add(QuestionAnswer(
-              questionId: question.bankQuestionId!,
-              answer: question.studentAnswer ?? GeneralValues.defaultAnswer,
-            ));
-          }
+          List<QuestionAnswer> questionAnswers = List<QuestionAnswer>.from(
+            state.questions.map(
+              (e) => QuestionAnswer(
+                questionId: e.bankQuestionId!,
+                answer: e.studentAnswer ?? GeneralValues.defaultAnswer,
+              ),
+            ),
+          );
           context
               .read<QuestionAnswerBloc>()
               .add(SetQuestionAnswerEvent(questionAnswers: questionAnswers));
@@ -165,25 +168,31 @@ class _ExerciseQuestionsScreenState extends State<ExerciseQuestionsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          if (questionIndex > 0) {
-                            context.read<QuestionIndexBloc>().add(
-                                SetQuestionIndexEvent(
-                                    index: questionIndex - 1));
-                          }
-                        },
-                        child: const Text('Sebelumnya'),
-                      ),
-                      ElevatedButton(
+                      questionIndex > 0
+                          ? CommonButton(
+                              text: 'Sebelumnya',
+                              onPressed: () {
+                                if (questionIndex > 0) {
+                                  context.read<QuestionIndexBloc>().add(
+                                      SetQuestionIndexEvent(
+                                          index: questionIndex - 1));
+                                }
+                              },
+                            )
+                          : const SizedBox(),
+                      CommonButton(
+                        text: questionIndex < questionsCount - 1
+                            ? 'Selanjutnya'
+                            : 'Kumpulin',
                         onPressed: () {
                           if (questionIndex < questionsCount - 1) {
                             context.read<QuestionIndexBloc>().add(
                                 SetQuestionIndexEvent(
                                     index: questionIndex + 1));
+                          } else {
+                            Fluttertoast.showToast(msg: 'Kumpulin');
                           }
                         },
-                        child: const Text('Selanjutnya'),
                       ),
                     ],
                   ),
