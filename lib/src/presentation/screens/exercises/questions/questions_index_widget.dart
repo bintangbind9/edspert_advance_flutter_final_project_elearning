@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/constants/app_colors.dart';
-import '../../../../domain/entities/question_model.dart';
+import '../../../../common/constants/general_values.dart';
+import '../../../../domain/entities/question_model/question_answer_model.dart';
+import '../../../bloc/bloc/question_answer_bloc.dart';
+import '../../../bloc/question_index/question_index_bloc.dart';
 
 class QuestionsIndexWidget extends StatelessWidget {
-  final List<Question> questions;
-  final bool isFilled;
-  final bool isSelected;
+  final int itemCount;
 
   const QuestionsIndexWidget({
     super.key,
-    required this.questions,
-    required this.isFilled,
-    required this.isSelected,
+    required this.itemCount,
   });
 
   @override
@@ -33,40 +33,66 @@ class QuestionsIndexWidget extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemCount: questions.length,
+            itemCount: itemCount,
             itemBuilder: (context, index) {
               return Row(
                 children: [
                   SizedBox(width: separatorWidth / 2),
-                  Container(
-                    width: circleIndexDiameter,
-                    height: circleIndexDiameter,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isSelected
-                          ? AppColors.primary
-                          : (isFilled
-                              ? AppColors.success
-                              : AppColors.grayscaleOffWhite),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.primary
-                            : (isFilled
-                                ? AppColors.success
-                                : AppColors.primary),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${++index}',
-                        style: TextStyle(
-                          color: isSelected
-                              ? AppColors.grayscaleOffWhite
-                              : (isFilled
-                                  ? AppColors.grayscaleOffWhite
-                                  : AppColors.primary),
-                        ),
-                      ),
+                  GestureDetector(
+                    onTap: () => context
+                        .read<QuestionIndexBloc>()
+                        .add(SetQuestionIndexEvent(index: index)),
+                    child: Builder(
+                      builder: (context) {
+                        final questionIndex =
+                            context.watch<QuestionIndexBloc>().state;
+                        final qaState =
+                            context.watch<QuestionAnswerBloc>().state;
+
+                        List<QuestionAnswer> questionAnswers = [];
+                        if (qaState is SetQuestionAnswerSuccess) {
+                          questionAnswers = qaState.questionAnswers;
+                        }
+
+                        QuestionAnswer questionAnswer =
+                            questionAnswers.isNotEmpty
+                                ? questionAnswers[index]
+                                : QuestionAnswer(questionId: '', answer: '');
+                        bool isFilled = questionAnswer.answer !=
+                            GeneralValues.defaultAnswer;
+
+                        return Container(
+                          width: circleIndexDiameter,
+                          height: circleIndexDiameter,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: questionIndex == index
+                                ? AppColors.primary
+                                : (isFilled
+                                    ? AppColors.success
+                                    : AppColors.grayscaleOffWhite),
+                            border: Border.all(
+                              color: questionIndex == index
+                                  ? AppColors.primary
+                                  : (isFilled
+                                      ? AppColors.success
+                                      : AppColors.primary),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                color: questionIndex == index
+                                    ? AppColors.grayscaleOffWhite
+                                    : (isFilled
+                                        ? AppColors.grayscaleOffWhite
+                                        : AppColors.primary),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(width: separatorWidth / 2),

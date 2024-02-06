@@ -1,4 +1,4 @@
-import '../entities/question_model.dart';
+import '../entities/question_model/question_model.dart';
 import '../entities/response_model.dart';
 import '../repositories/course_repository.dart';
 import 'usecase.dart';

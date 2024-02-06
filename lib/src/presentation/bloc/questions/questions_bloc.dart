@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../../domain/entities/question_model.dart';
+import '../../../domain/entities/question_model/question_model.dart';
 import '../../../domain/usecases/get_questions_usecase.dart';
 
 part 'questions_event.dart';

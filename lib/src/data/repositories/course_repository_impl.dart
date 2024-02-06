@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../../common/constants/urls.dart';
 import '../../domain/entities/course_model.dart';
-import '../../domain/entities/question_model.dart';
+import '../../domain/entities/question_model/question_model.dart';
 import '../../domain/entities/response_model.dart';
 import '../../domain/repositories/course_repository.dart';
 import '../network/http_config.dart';

@@ -1,5 +1,5 @@
 import '../entities/course_model.dart';
-import '../entities/question_model.dart';
+import '../entities/question_model/question_model.dart';
 import '../entities/response_model.dart';
 
 abstract class CourseRepository {

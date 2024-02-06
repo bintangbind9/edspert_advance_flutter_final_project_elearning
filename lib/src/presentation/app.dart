@@ -19,8 +19,10 @@ import '../domain/usecases/sign_in_google_usecase.dart';
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/banners/banners_bloc.dart';
 import 'bloc/base_screen_index/base_screen_index_bloc.dart';
+import 'bloc/bloc/question_answer_bloc.dart';
 import 'bloc/courses/courses_bloc.dart';
 import 'bloc/exercises/exercises_bloc.dart';
+import 'bloc/question_index/question_index_bloc.dart';
 import 'bloc/questions/questions_bloc.dart';
 import 'bloc/user/user_bloc.dart';
 import 'screens/auth_screen/login_screen.dart';
@@ -81,6 +83,12 @@ class App extends StatelessWidget {
               repository: CourseRepositoryImpl(),
             ),
           ),
+        ),
+        BlocProvider(
+          create: (context) => QuestionIndexBloc(),
+        ),
+        BlocProvider(
+          create: (context) => QuestionAnswerBloc(),
         ),
       ],
       child: MaterialApp(
