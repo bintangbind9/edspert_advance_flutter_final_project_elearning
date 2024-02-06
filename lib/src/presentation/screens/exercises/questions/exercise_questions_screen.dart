@@ -67,7 +67,7 @@ class _ExerciseQuestionsScreenState extends State<ExerciseQuestionsScreen> {
                 QuestionsIndexWidget(
                   questions: state.questions,
                   isFilled: false,
-                  isAllFilled: false,
+                  isSelected: false,
                 ),
               ],
             );

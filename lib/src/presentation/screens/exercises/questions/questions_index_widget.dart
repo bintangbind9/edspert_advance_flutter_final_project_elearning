@@ -6,13 +6,13 @@ import '../../../../domain/entities/question_model.dart';
 class QuestionsIndexWidget extends StatelessWidget {
   final List<Question> questions;
   final bool isFilled;
-  final bool isAllFilled;
+  final bool isSelected;
 
   const QuestionsIndexWidget({
     super.key,
     required this.questions,
     required this.isFilled,
-    required this.isAllFilled,
+    required this.isSelected,
   });
 
   @override
@@ -43,21 +43,24 @@ class QuestionsIndexWidget extends StatelessWidget {
                     height: circleIndexDiameter,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isAllFilled
-                          ? AppColors.success
+                      color: isSelected
+                          ? AppColors.primary
                           : (isFilled
-                              ? AppColors.primary
+                              ? AppColors.success
                               : AppColors.grayscaleOffWhite),
                       border: Border.all(
-                        color:
-                            isAllFilled ? AppColors.success : AppColors.primary,
+                        color: isSelected
+                            ? AppColors.primary
+                            : (isFilled
+                                ? AppColors.success
+                                : AppColors.primary),
                       ),
                     ),
                     child: Center(
                       child: Text(
                         '${++index}',
                         style: TextStyle(
-                          color: isAllFilled
+                          color: isSelected
                               ? AppColors.grayscaleOffWhite
                               : (isFilled
                                   ? AppColors.grayscaleOffWhite
