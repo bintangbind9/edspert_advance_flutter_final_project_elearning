@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../common/constants/app_colors.dart';
 import '../data/firebase/firebase_service.dart';
+import '../data/network/api_elearning.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../data/repositories/banner_repository_impl.dart';
 import '../data/repositories/course_repository_impl.dart';
-import '../data/repositories/exercise_repository_impl.dart';
-import '../data/repositories/user_repository_impl.dart';
 import '../domain/usecases/get_banners_usecase.dart';
 import '../domain/usecases/get_courses_usecase.dart';
 import '../domain/usecases/get_exercises_usecase.dart';
@@ -45,42 +44,60 @@ class App extends StatelessWidget {
             signInWithGoogleUsecase: SignInWithGoogleUsecase(
               repository: AuthRepositoryImpl(
                 firebaseService: FirebaseService(),
+                apiElearning: ApiElearning(),
               ),
             ),
           ),
         ),
         BlocProvider(
           create: (context) => CoursesBloc(
-            getCoursesUsecase:
-                GetCoursesUsecase(repository: CourseRepositoryImpl()),
+            getCoursesUsecase: GetCoursesUsecase(
+              repository: CourseRepositoryImpl(
+                apiElearning: ApiElearning(),
+              ),
+            ),
           ),
         ),
         BlocProvider(
           create: (context) => BannersBloc(
-            getBannersUsecase:
-                GetBannersUsecase(repository: BannerRepositoryImpl()),
+            getBannersUsecase: GetBannersUsecase(
+              repository: BannerRepositoryImpl(
+                apiElearning: ApiElearning(),
+              ),
+            ),
           ),
         ),
         BlocProvider(
           create: (context) => ExercisesBloc(
-            getExercisesUsecase:
-                GetExercisesUsecase(repository: ExerciseRepositoryImpl()),
+            getExercisesUsecase: GetExercisesUsecase(
+              repository: CourseRepositoryImpl(
+                apiElearning: ApiElearning(),
+              ),
+            ),
           ),
         ),
         BlocProvider(
           create: (context) => UserBloc(
             registerUserUsecase: RegisterUserUsecase(
-              repository: UserRepositoryImpl(),
+              repository: AuthRepositoryImpl(
+                firebaseService: FirebaseService(),
+                apiElearning: ApiElearning(),
+              ),
             ),
             getUserByEmailUsecase: GetUserByEmailUsecase(
-              repository: UserRepositoryImpl(),
+              repository: AuthRepositoryImpl(
+                firebaseService: FirebaseService(),
+                apiElearning: ApiElearning(),
+              ),
             ),
           ),
         ),
         BlocProvider(
           create: (context) => QuestionsBloc(
             getQuestionsUsecase: GetQuestionsUsecase(
-              repository: CourseRepositoryImpl(),
+              repository: CourseRepositoryImpl(
+                apiElearning: ApiElearning(),
+              ),
             ),
           ),
         ),

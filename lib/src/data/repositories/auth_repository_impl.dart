@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../domain/entities/response_model.dart';
+import '../../domain/entities/user_model/user_model.dart';
+import '../../domain/entities/user_model/user_registration_req.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../firebase/firebase_service.dart';
+import '../network/api_elearning.dart';
 
 enum AuthProvider {
   google,
@@ -12,11 +16,29 @@ enum AuthProvider {
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseService firebaseService;
+  final ApiElearning apiElearning;
 
-  AuthRepositoryImpl({required this.firebaseService});
+  AuthRepositoryImpl({
+    required this.firebaseService,
+    required this.apiElearning,
+  });
 
   @override
   Future<User?> signInWithGoogle() async {
     return await firebaseService.signInWithGoogle();
+  }
+
+  @override
+  Future<ResponseModel<UserModel?>?> getUserByEmail({
+    required String email,
+  }) async {
+    return await apiElearning.getUserByEmail(email: email);
+  }
+
+  @override
+  Future<ResponseModel<UserModel?>?> registerUser({
+    required UserRegistrationReq req,
+  }) async {
+    return await apiElearning.registerUser(req: req);
   }
 }

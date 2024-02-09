@@ -1,16 +1,16 @@
 import '../entities/exercise_model.dart';
-import '../repositories/exercise_repository.dart';
+import '../repositories/course_repository.dart';
 import 'usecase.dart';
 
 class GetExercisesUsecase
     implements UseCase<List<Exercise>?, GetExercisesParams> {
-  final ExerciseRepository repository;
+  final CourseRepository repository;
 
   GetExercisesUsecase({required this.repository});
 
   @override
   Future<List<Exercise>?> call(GetExercisesParams params) async {
-    return await repository.getExercisesByCourseIdAndEmail(
+    return await repository.getExercises(
       courseId: params.courseId,
       email: params.email,
     );
