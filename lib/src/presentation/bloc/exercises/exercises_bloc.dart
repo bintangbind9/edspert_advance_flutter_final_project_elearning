@@ -23,6 +23,7 @@ class ExercisesBloc extends Bloc<ExercisesEvent, ExercisesState> {
     required this.getExerciseResultUsecase,
   }) : super(ExercisesInitial()) {
     on<GetExercisesByCourseIdAndEmailEvent>((event, emit) async {
+      emit(ExercisesInitial());
       emit(GetExercisesLoading());
 
       final List<Exercise>? exercises =

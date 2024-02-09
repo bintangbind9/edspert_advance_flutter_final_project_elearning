@@ -60,6 +60,7 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
       ),
       body: BlocBuilder<ExercisesBloc, ExercisesState>(
         buildWhen: (previous, current) =>
+            (previous is ExercisesInitial && current is GetExercisesLoading) ||
             (previous is GetExercisesLoading &&
                 current is GetExercisesSuccess) ||
             (previous is GetExercisesLoading && current is GetExercisesError),
