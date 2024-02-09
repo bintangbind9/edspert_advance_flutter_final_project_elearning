@@ -5,16 +5,18 @@ import 'package:dio/dio.dart';
 import '../../common/constants/urls.dart';
 import '../../domain/entities/course_model.dart';
 import '../../domain/entities/event_banner_model.dart';
-import '../../domain/entities/exercise_model.dart';
+import '../../domain/entities/exercises/exercise_model.dart';
+import '../../domain/entities/exercises/exercise_result.dart';
+import '../../domain/entities/exercises/submit_exercise_answers_req.dart';
 import '../../domain/entities/question_model/question_model.dart';
 import '../../domain/entities/response_model.dart';
 import '../../domain/entities/user_model/user_model.dart';
-import '../../domain/entities/user_model/user_registration_req.dart';
+import '../../domain/entities/user_model/user_model_req.dart';
 import 'http_config.dart';
 
 class ApiElearning {
   Future<ResponseModel<UserModel?>?> registerUser({
-    required UserRegistrationReq req,
+    required UserModelReq req,
   }) async {
     try {
       final response = await HttpConfig.dioConfig().post(
@@ -55,6 +57,39 @@ class ApiElearning {
         queryParameters: {
           "email": email,
         },
+      );
+
+      if (response.statusCode == 200) {
+        final responseJson = response.data;
+
+        ResponseModel<UserModel?> responseModel =
+            ResponseModel<UserModel?>.fromJson(
+          json: responseJson,
+          toJsonData: (data) => data?.toJson(),
+          fromJsonData: (data) =>
+              responseJson['data'] == null ? null : UserModel.fromJson(data),
+        );
+
+        return responseModel;
+      }
+
+      return null;
+    } on DioException catch (e) {
+      log('${e.error}: ${e.message}');
+      return null;
+    } catch (e) {
+      log('${e.toString()}: Unknown Error');
+      return null;
+    }
+  }
+
+  Future<ResponseModel<UserModel?>?> updateUser({
+    required UserModelReq req,
+  }) async {
+    try {
+      final response = await HttpConfig.dioConfig().post(
+        Urls.userUpdate,
+        data: req.toJson(),
       );
 
       if (response.statusCode == 200) {
@@ -217,6 +252,75 @@ class ApiElearning {
         );
 
         return responseModel.data;
+      }
+
+      return null;
+    } on DioException catch (e) {
+      log('${e.error}: ${e.message}');
+      return null;
+    } catch (e) {
+      log('${e.toString()}: Unknown Error');
+      return null;
+    }
+  }
+
+  Future<ResponseModel<void>?> submitExerciseAnswers({
+    required SubmitExerciseAnswersReq req,
+  }) async {
+    try {
+      final response = await HttpConfig.dioConfig().post(
+        Urls.submitExerciseAnswers,
+        data: req.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        final responseJson = response.data;
+
+        ResponseModel<void> responseModel = ResponseModel<void>.fromJson(
+          json: responseJson,
+          toJsonData: (data) {},
+          fromJsonData: (data) {},
+        );
+
+        return responseModel;
+      }
+
+      return null;
+    } on DioException catch (e) {
+      log('${e.error}: ${e.message}');
+      return null;
+    } catch (e) {
+      log('${e.toString()}: Unknown Error');
+      return null;
+    }
+  }
+
+  Future<ResponseModel<ExerciseResult?>?> getExerciseResult({
+    required String exerciseId,
+    required String email,
+  }) async {
+    try {
+      final response = await HttpConfig.dioConfig().get(
+        Urls.exerciseResult,
+        queryParameters: {
+          "exercise_id": exerciseId,
+          "user_email": email,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseJson = response.data;
+
+        ResponseModel<ExerciseResult?> responseModel =
+            ResponseModel<ExerciseResult?>.fromJson(
+          json: responseJson,
+          toJsonData: (data) => data?.toJson(),
+          fromJsonData: (data) => responseJson['data'] == null
+              ? null
+              : ExerciseResult.fromJson(data),
+        );
+
+        return responseModel;
       }
 
       return null;

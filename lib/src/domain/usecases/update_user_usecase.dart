@@ -4,14 +4,14 @@ import '../entities/user_model/user_model_req.dart';
 import '../repositories/auth_repository.dart';
 import 'usecase.dart';
 
-class RegisterUserUsecase
+class UpdateUserUsecase
     implements UseCase<ResponseModel<UserModel?>?, UserModelReq> {
   final AuthRepository repository;
 
-  RegisterUserUsecase({required this.repository});
+  UpdateUserUsecase({required this.repository});
 
   @override
-  Future<ResponseModel<UserModel?>?> call(UserModelReq req) async {
-    return await repository.registerUser(req: req);
+  Future<ResponseModel<UserModel?>?> call(UserModelReq params) async {
+    return await repository.updateUser(req: params);
   }
 }

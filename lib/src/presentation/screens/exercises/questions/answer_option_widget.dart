@@ -4,7 +4,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../../../common/constants/app_colors.dart';
 import '../../../../domain/entities/question_model/question_answer_model.dart';
-import '../../../bloc/bloc/question_answer_bloc.dart';
+import '../../../bloc/question_answer/question_answer_bloc.dart';
 
 class AnswerOptionWidget extends StatelessWidget {
   const AnswerOptionWidget({

@@ -5,7 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/general_values.dart';
-import '../../../domain/entities/user_model/user_registration_req.dart';
+import '../../../domain/entities/user_model/user_model_req.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../widgets/register_button.dart';
 import 'login_screen.dart';
@@ -342,7 +342,7 @@ class _RegisterPageState extends State<RegisterScreen> {
 
                           context.read<UserBloc>().add(
                                 RegisterUserEvent(
-                                  userRegistrationReq: UserRegistrationReq(
+                                  userRegistrationReq: UserModelReq(
                                     namaLengkap: _fullNameTextController.text,
                                     email: _emailTextController.text,
                                     namaSekolah: _schoolNameTextController.text,

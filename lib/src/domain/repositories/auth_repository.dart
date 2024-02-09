@@ -2,14 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../entities/response_model.dart';
 import '../entities/user_model/user_model.dart';
-import '../entities/user_model/user_registration_req.dart';
+import '../entities/user_model/user_model_req.dart';
 
 abstract class AuthRepository {
   Future<User?> signInWithGoogle();
 
   Future<ResponseModel<UserModel?>?> registerUser({
-    required UserRegistrationReq req,
+    required UserModelReq req,
   });
 
   Future<ResponseModel<UserModel?>?> getUserByEmail({required String email});
+
+  Future<ResponseModel<UserModel?>?> updateUser({required UserModelReq req});
 }

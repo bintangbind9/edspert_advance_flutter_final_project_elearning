@@ -11,3 +11,13 @@ class GetExercisesByCourseIdAndEmailEvent extends ExercisesEvent {
     required this.email,
   });
 }
+
+class SubmitExerciseEvent extends ExercisesEvent {
+  final SubmitExerciseAnswersReq req;
+  SubmitExerciseEvent({required this.req});
+}
+
+class GetExerciseResultEvent extends ExercisesEvent {
+  final GetExerciseResultParams params;
+  GetExerciseResultEvent({required this.params});
+}

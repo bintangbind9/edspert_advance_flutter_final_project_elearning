@@ -48,3 +48,21 @@ final class GetUserByEmailError extends UserState {
   final String message;
   GetUserByEmailError({required this.message});
 }
+
+// Update User
+final class UpdateUserLoading extends UserState {}
+
+final class UpdateUserSuccess extends UserState {
+  final UserModel userModel;
+  UpdateUserSuccess({required this.userModel});
+}
+
+final class UpdateUserApiError extends UserState {
+  final String message;
+  UpdateUserApiError({required this.message});
+}
+
+final class UpdateUserInternalError extends UserState {
+  final String message;
+  UpdateUserInternalError({required this.message});
+}

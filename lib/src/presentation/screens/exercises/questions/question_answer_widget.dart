@@ -5,7 +5,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../../../common/constants/styles.dart';
 import '../../../../domain/entities/question_model/question_answer_model.dart';
 import '../../../../domain/entities/question_model/question_model.dart';
-import '../../../bloc/bloc/question_answer_bloc.dart';
+import '../../../bloc/question_answer/question_answer_bloc.dart';
 import 'answer_option_widget.dart';
 
 class QuestionAnswerWidget extends StatelessWidget {

@@ -1,4 +1,4 @@
-import '../entities/exercise_model.dart';
+import '../entities/exercises/exercise_model.dart';
 import '../repositories/course_repository.dart';
 import 'usecase.dart';
 

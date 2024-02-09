@@ -37,9 +37,11 @@ class CommonButton extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                color: onPressed == null ? AppColors.disableText : textColor,
-                fontWeight: FontWeight.w500),
+              color: onPressed == null ? AppColors.disableText : textColor,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),

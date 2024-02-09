@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/general_values.dart';
 import '../../../../domain/entities/question_model/question_answer_model.dart';
-import '../../../bloc/bloc/question_answer_bloc.dart';
+import '../../../bloc/question_answer/question_answer_bloc.dart';
 import '../../../bloc/question_index/question_index_bloc.dart';
 
 class QuestionsIndexWidget extends StatelessWidget {

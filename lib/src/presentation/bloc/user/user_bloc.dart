@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../domain/entities/response_model.dart';
 import '../../../domain/entities/user_model/user_model.dart';
-import '../../../domain/entities/user_model/user_registration_req.dart';
+import '../../../domain/entities/user_model/user_model_req.dart';
 import '../../../domain/usecases/get_user_by_email_usecase.dart';
 import '../../../domain/usecases/register_user_usecase.dart';
+import '../../../domain/usecases/update_user_usecase.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
@@ -12,10 +14,12 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final RegisterUserUsecase registerUserUsecase;
   final GetUserByEmailUsecase getUserByEmailUsecase;
+  final UpdateUserUsecase updateUserUsecase;
 
   UserBloc({
     required this.registerUserUsecase,
     required this.getUserByEmailUsecase,
+    required this.updateUserUsecase,
   }) : super(UserInitial()) {
     on<RegisterUserEvent>((event, emit) async {
       emit(RegisterUserLoading());
@@ -74,6 +78,27 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       } else {
         emit(GetUserByEmailError(
           message: 'Oops! Get User Failed. Something went wrong.',
+        ));
+      }
+    });
+
+    on<UpdateUserEvent>((event, emit) async {
+      emit(UpdateUserLoading());
+
+      final ResponseModel<UserModel?>? responseModel =
+          await updateUserUsecase.call(event.req);
+
+      if (responseModel != null) {
+        if (responseModel.status == 1 && responseModel.data != null) {
+          emit(UpdateUserSuccess(userModel: responseModel.data!));
+        } else {
+          emit(UpdateUserApiError(
+            message: responseModel.message ?? 'Update User Failed',
+          ));
+        }
+      } else {
+        emit(UpdateUserInternalError(
+          message: 'Oops! Update User Failed. Something went wrong.',
         ));
       }
     });

@@ -1,5 +1,7 @@
 import '../../domain/entities/course_model.dart';
-import '../../domain/entities/exercise_model.dart';
+import '../../domain/entities/exercises/exercise_model.dart';
+import '../../domain/entities/exercises/exercise_result.dart';
+import '../../domain/entities/exercises/submit_exercise_answers_req.dart';
 import '../../domain/entities/question_model/question_model.dart';
 import '../../domain/entities/response_model.dart';
 import '../../domain/repositories/course_repository.dart';
@@ -37,6 +39,24 @@ class CourseRepositoryImpl implements CourseRepository {
     required String email,
   }) async {
     return await apiElearning.getQuestions(
+      exerciseId: exerciseId,
+      email: email,
+    );
+  }
+
+  @override
+  Future<ResponseModel<void>?> submitExerciseAnswers({
+    required SubmitExerciseAnswersReq req,
+  }) async {
+    return await apiElearning.submitExerciseAnswers(req: req);
+  }
+
+  @override
+  Future<ResponseModel<ExerciseResult?>?> getExerciseResult({
+    required String exerciseId,
+    required String email,
+  }) async {
+    return await apiElearning.getExerciseResult(
       exerciseId: exerciseId,
       email: email,
     );

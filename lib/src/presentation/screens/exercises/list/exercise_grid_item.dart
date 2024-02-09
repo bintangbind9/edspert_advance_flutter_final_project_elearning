@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/asset_images.dart';
 import '../../../../common/constants/styles.dart';
-import '../../../../domain/entities/exercise_model.dart';
+import '../../../../domain/entities/exercises/exercise_model.dart';
 import '../questions/exercise_questions_screen.dart';
 
 class ExerciseGridItem extends StatelessWidget {

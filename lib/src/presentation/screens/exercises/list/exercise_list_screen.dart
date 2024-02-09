@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/styles.dart';
-import '../../../../domain/entities/exercise_model.dart';
+import '../../../../domain/entities/exercises/exercise_model.dart';
 import '../../../bloc/exercises/exercises_bloc.dart';
 import '../../../widgets/sub_section.dart';
 import 'exercise_empty.dart';
@@ -59,6 +59,10 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
         ),
       ),
       body: BlocBuilder<ExercisesBloc, ExercisesState>(
+        buildWhen: (previous, current) =>
+            (previous is GetExercisesLoading &&
+                current is GetExercisesSuccess) ||
+            (previous is GetExercisesLoading && current is GetExercisesError),
         builder: (context, state) {
           if (state is GetExercisesSuccess) {
             if (state.exercises.isEmpty) {

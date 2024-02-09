@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/entities/response_model.dart';
 import '../../domain/entities/user_model/user_model.dart';
-import '../../domain/entities/user_model/user_registration_req.dart';
+import '../../domain/entities/user_model/user_model_req.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../firebase/firebase_service.dart';
 import '../network/api_elearning.dart';
@@ -37,8 +37,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<ResponseModel<UserModel?>?> registerUser({
-    required UserRegistrationReq req,
+    required UserModelReq req,
   }) async {
     return await apiElearning.registerUser(req: req);
+  }
+
+  @override
+  Future<ResponseModel<UserModel?>?> updateUser({
+    required UserModelReq req,
+  }) async {
+    return await apiElearning.updateUser(req: req);
   }
 }

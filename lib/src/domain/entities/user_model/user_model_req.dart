@@ -1,4 +1,4 @@
-class UserRegistrationReq {
+class UserModelReq {
   final String namaLengkap;
   final String email;
   final String namaSekolah;
@@ -7,7 +7,7 @@ class UserRegistrationReq {
   final String jenjang;
   final String? foto;
 
-  UserRegistrationReq({
+  UserModelReq({
     required this.namaLengkap,
     required this.email,
     required this.namaSekolah,
@@ -17,8 +17,7 @@ class UserRegistrationReq {
     this.foto,
   });
 
-  factory UserRegistrationReq.fromJson(Map<String, dynamic> json) =>
-      UserRegistrationReq(
+  factory UserModelReq.fromJson(Map<String, dynamic> json) => UserModelReq(
         namaLengkap: json["nama_lengkap"],
         email: json["email"],
         namaSekolah: json["nama_sekolah"],
