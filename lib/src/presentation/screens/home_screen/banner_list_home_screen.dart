@@ -15,6 +15,9 @@ class BannerListHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BannersBloc, BannersState>(
+      buildWhen: (previous, current) =>
+          (previous is GetBannersLoading && current is GetBannersSuccess) ||
+          (previous is GetBannersLoading && current is GetBannersError),
       builder: (context, state) {
         return SubSection(
           title: 'Terbaru',

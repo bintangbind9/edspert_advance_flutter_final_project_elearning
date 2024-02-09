@@ -307,6 +307,11 @@ class _RegisterPageState extends State<RegisterScreen> {
                   height: 36,
                 ),
                 BlocBuilder<UserBloc, UserState>(
+                  buildWhen: (previous, current) =>
+                      (previous is RegisterUserLoading &&
+                          current is RegisterUserSuccess) ||
+                      (previous is RegisterUserLoading &&
+                          current is RegisterUserError),
                   builder: (context, state) {
                     return RegisterButton(
                       text: state is RegisterUserLoading

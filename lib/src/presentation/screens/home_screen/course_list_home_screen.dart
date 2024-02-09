@@ -17,6 +17,9 @@ class CourseListHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CoursesBloc, CoursesState>(
+      buildWhen: (previous, current) =>
+          (previous is GetCoursesLoading && current is GetCoursesSuccess) ||
+          (previous is GetCoursesLoading && current is GetCoursesError),
       builder: (context, state) {
         return SubSection(
           title: 'Pilih Pelajaran',
