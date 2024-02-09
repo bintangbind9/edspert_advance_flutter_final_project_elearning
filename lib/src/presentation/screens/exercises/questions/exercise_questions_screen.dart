@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/general_values.dart';
+import '../../../../common/constants/styles.dart';
 import '../../../../domain/entities/exercise_model.dart';
 import '../../../../domain/entities/question_model/question_answer_model.dart';
 import '../../../../domain/entities/question_model/question_model.dart';
@@ -13,9 +12,9 @@ import '../../../../domain/usecases/get_questions_usecase.dart';
 import '../../../bloc/bloc/question_answer_bloc.dart';
 import '../../../bloc/question_index/question_index_bloc.dart';
 import '../../../bloc/questions/questions_bloc.dart';
-import '../../../widgets/common_button.dart';
 import '../../../widgets/simple_error_widget.dart';
-import 'answer_option_widget.dart';
+import 'bottom_button_widget.dart';
+import 'question_answer_widget.dart';
 import 'questions_index_widget.dart';
 
 // https://stackoverflow.com/questions/72448181/how-to-properly-use-the-findchildindexcallback-in-listview-builder-flutter
@@ -101,116 +100,31 @@ class _ExerciseQuestionsScreenState extends State<ExerciseQuestionsScreen> {
               int questionsCount = getQuestionsState.questions.length;
 
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   QuestionsIndexWidget(
                     itemCount: questionsCount,
                   ),
-                  Text('Soal Nomor ${questionIndex + 1}'),
-                  Expanded(
-                    child: BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
-                      buildWhen: (previous, current) =>
-                          (previous is SetQuestionAnswerLoading &&
-                              current is SetQuestionAnswerSuccess),
-                      builder: (context, qaState) {
-                        if (qaState is SetQuestionAnswerSuccess) {
-                          QuestionAnswer questionAnswer =
-                              qaState.questionAnswers.singleWhere((e) =>
-                                  e.questionId == question.bankQuestionId!);
-
-                          return ListView(
-                            children: [
-                              HtmlWidget(
-                                question.questionTitle!,
-                              ),
-                              AnswerOptionWidget(
-                                questionId: question.bankQuestionId!,
-                                questionAnswers: qaState.questionAnswers,
-                                selectedAnswer: questionAnswer.answer,
-                                textAnswer: question.optionA!,
-                                labelAnswer: 'A',
-                              ),
-                              AnswerOptionWidget(
-                                questionId: question.bankQuestionId!,
-                                questionAnswers: qaState.questionAnswers,
-                                selectedAnswer: questionAnswer.answer,
-                                textAnswer: question.optionB!,
-                                labelAnswer: 'B',
-                              ),
-                              AnswerOptionWidget(
-                                questionId: question.bankQuestionId!,
-                                questionAnswers: qaState.questionAnswers,
-                                selectedAnswer: questionAnswer.answer,
-                                textAnswer: question.optionC!,
-                                labelAnswer: 'C',
-                              ),
-                              AnswerOptionWidget(
-                                questionId: question.bankQuestionId!,
-                                questionAnswers: qaState.questionAnswers,
-                                selectedAnswer: questionAnswer.answer,
-                                textAnswer: question.optionD!,
-                                labelAnswer: 'D',
-                              ),
-                              AnswerOptionWidget(
-                                questionId: question.bankQuestionId!,
-                                questionAnswers: qaState.questionAnswers,
-                                selectedAnswer: questionAnswer.answer,
-                                textAnswer: question.optionE!,
-                                labelAnswer: 'E',
-                              ),
-                            ],
-                          );
-                        }
-
-                        return const Center(child: CircularProgressIndicator());
-                      },
+                  Padding(
+                    padding: const EdgeInsets.all(Styles.mainPadding),
+                    child: Text(
+                      'Soal Nomor ${questionIndex + 1}',
+                      style: const TextStyle(
+                        color: AppColors.disableText,
+                      ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      questionIndex > 0
-                          ? CommonButton(
-                              text: 'Sebelumnya',
-                              onPressed: () {
-                                if (questionIndex > 0) {
-                                  context.read<QuestionIndexBloc>().add(
-                                      SetQuestionIndexEvent(
-                                          index: questionIndex - 1));
-                                }
-                              },
-                            )
-                          : const SizedBox(),
-                      BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
-                        builder: (context, state) {
-                          return CommonButton(
-                            text: questionIndex < questionsCount - 1
-                                ? 'Selanjutnya'
-                                : 'Kumpulin',
-                            onPressed: () {
-                              if (questionIndex < questionsCount - 1) {
-                                context.read<QuestionIndexBloc>().add(
-                                    SetQuestionIndexEvent(
-                                        index: questionIndex + 1));
-                              } else {
-                                if (state is SetQuestionAnswerSuccess) {
-                                  if (state.questionAnswers.any(
-                                    (e) =>
-                                        e.answer == GeneralValues.defaultAnswer,
-                                  )) {
-                                    Fluttertoast.showToast(
-                                      msg:
-                                          'Oops! Soal belum dikerjakan semua. Periksa kembali jawaban Kamu!',
-                                    );
-                                  } else {
-                                    Fluttertoast.showToast(msg: 'Kumpulin');
-                                  }
-                                }
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                  QuestionAnswerWidget(
+                    questionIndex: questionIndex,
+                    question: question,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(Styles.mainPadding),
+                    child: BottomButtonWidget(
+                      questionIndex: questionIndex,
+                      questionsCount: questionsCount,
+                    ),
                   ),
                 ],
               );
