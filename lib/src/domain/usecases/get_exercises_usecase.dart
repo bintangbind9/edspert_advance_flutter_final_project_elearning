@@ -3,7 +3,7 @@ import '../repositories/course_repository.dart';
 import 'usecase.dart';
 
 class GetExercisesUsecase
-    implements UseCase<List<Exercise>?, GetExercisesParams> {
+    implements UseCase<Future<List<Exercise>?>, GetExercisesParams> {
   final CourseRepository repository;
 
   GetExercisesUsecase({required this.repository});

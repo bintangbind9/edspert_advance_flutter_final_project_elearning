@@ -5,7 +5,7 @@ import '../repositories/auth_repository.dart';
 import 'usecase.dart';
 
 class UpdateUserUsecase
-    implements UseCase<ResponseModel<UserModel?>?, UserModelReq> {
+    implements UseCase<Future<ResponseModel<UserModel?>?>, UserModelReq> {
   final AuthRepository repository;
 
   UpdateUserUsecase({required this.repository});

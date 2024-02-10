@@ -5,7 +5,8 @@ import 'usecase.dart';
 
 class GetExerciseResultUsecase
     implements
-        UseCase<ResponseModel<ExerciseResult?>?, GetExerciseResultParams> {
+        UseCase<Future<ResponseModel<ExerciseResult?>?>,
+            GetExerciseResultParams> {
   final CourseRepository repository;
 
   GetExerciseResultUsecase({required this.repository});

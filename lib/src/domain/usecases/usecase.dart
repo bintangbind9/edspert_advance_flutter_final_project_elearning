@@ -1,3 +1,3 @@
 abstract class UseCase<ReturnType, Params> {
-  Future<ReturnType> call(Params params);
+  ReturnType call(Params params);
 }

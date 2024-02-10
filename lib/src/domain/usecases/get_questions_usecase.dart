@@ -4,7 +4,8 @@ import '../repositories/course_repository.dart';
 import 'usecase.dart';
 
 class GetQuestionsUsecase
-    implements UseCase<ResponseModel<List<Question>>?, GetQuestionsParams> {
+    implements
+        UseCase<Future<ResponseModel<List<Question>>?>, GetQuestionsParams> {
   final CourseRepository repository;
 
   GetQuestionsUsecase({

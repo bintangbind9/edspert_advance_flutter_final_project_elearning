@@ -2,7 +2,8 @@ import '../entities/course_model.dart';
 import '../repositories/course_repository.dart';
 import 'usecase.dart';
 
-class GetCoursesUsecase implements UseCase<List<Course>?, GetCoursesParams> {
+class GetCoursesUsecase
+    implements UseCase<Future<List<Course>?>, GetCoursesParams> {
   final CourseRepository repository;
 
   GetCoursesUsecase({required this.repository});

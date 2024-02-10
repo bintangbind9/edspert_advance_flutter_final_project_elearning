@@ -3,7 +3,7 @@ import '../repositories/banner_repository.dart';
 import 'usecase.dart';
 
 class GetBannersUsecase
-    implements UseCase<List<EventBanner>?, GetBannersParams> {
+    implements UseCase<Future<List<EventBanner>?>, GetBannersParams> {
   final BannerRepository repository;
 
   GetBannersUsecase({required this.repository});

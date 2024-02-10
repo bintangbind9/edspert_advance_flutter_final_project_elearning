@@ -4,7 +4,7 @@ import '../repositories/course_repository.dart';
 import 'usecase.dart';
 
 class SubmitExerciseAnswersUsecase
-    implements UseCase<ResponseModel<void>?, SubmitExerciseAnswersReq> {
+    implements UseCase<Future<ResponseModel<void>?>, SubmitExerciseAnswersReq> {
   final CourseRepository repository;
 
   SubmitExerciseAnswersUsecase({required this.repository});

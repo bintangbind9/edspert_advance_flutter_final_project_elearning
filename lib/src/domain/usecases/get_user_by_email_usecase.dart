@@ -4,7 +4,7 @@ import '../repositories/auth_repository.dart';
 import 'usecase.dart';
 
 class GetUserByEmailUsecase
-    implements UseCase<ResponseModel<UserModel?>?, String> {
+    implements UseCase<Future<ResponseModel<UserModel?>?>, String> {
   final AuthRepository repository;
 
   GetUserByEmailUsecase({required this.repository});
