@@ -14,3 +14,8 @@ class SendMessageEvent extends DiscussionEvent {
   final SendMessageParams params;
   SendMessageEvent({required this.params});
 }
+
+class SendMessageWithFilesEvent extends DiscussionEvent {
+  final SendMessageWithFilesParams params;
+  SendMessageWithFilesEvent({required this.params});
+}

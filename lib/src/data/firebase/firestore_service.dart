@@ -1,17 +1,24 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../common/constants/general_values.dart';
 import '../../domain/entities/firestore/firestore_group_model.dart';
 import '../../domain/entities/firestore/firestore_message_model.dart';
 import '../../domain/entities/firestore/firestore_user_model.dart';
+import 'storage_service.dart';
 
 class FirestoreService {
+  final StorageService storageService;
+
   // reference for our collections
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection('groups');
+
+  FirestoreService({required this.storageService});
 
   // saving the user data
   Future<void> createOrUpdateUser({
@@ -115,11 +122,7 @@ class FirestoreService {
         );
     return messageModelRef.orderBy('time', descending: true).snapshots().map(
       (QuerySnapshot<FirestoreMessageModel> query) {
-        List<FirestoreMessageModel> messages = <FirestoreMessageModel>[];
-        for (DocumentSnapshot<FirestoreMessageModel> message in query.docs) {
-          messages.add(message.data()!);
-        }
-        return messages;
+        return query.docs.map((e) => e.data()).toList();
       },
     );
   }
@@ -215,6 +218,54 @@ class FirestoreService {
         "message": message.message,
         "email": message.email,
         "time": message.time
+      };
+      await groupCollection
+          .doc(groupId)
+          .collection("messages")
+          .add(chatMessageData);
+      await groupCollection.doc(groupId).update({
+        "recentMessage": chatMessageData['message'],
+        "recentMessageSender": chatMessageData['email'],
+        "recentMessageTime": chatMessageData['time'],
+      });
+
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  // send message with files
+  Future<bool> sendMessageWithFiles({
+    required String groupId,
+    required FirestoreMessageModel message,
+    required Map<String, Uint8List> files,
+    required StoragePath storagePath,
+  }) async {
+    try {
+      List<String> filesUrl = [];
+
+      for (final file in files.entries) {
+        UploadFileResult uploadFileResult = await storageService.uploadFile(
+          fileName: file.key,
+          fileByte: file.value,
+          storagePath: storagePath,
+        );
+
+        if (uploadFileResult.isSuccess) {
+          filesUrl.add(uploadFileResult.downloadUrl!);
+        } else {
+          log('Send message with files error! Error when uploading files!');
+          return false;
+        }
+      }
+
+      Map<String, dynamic> chatMessageData = {
+        "message": message.message,
+        "email": message.email,
+        "time": message.time,
+        "files": FieldValue.arrayUnion(filesUrl),
       };
       await groupCollection
           .doc(groupId)

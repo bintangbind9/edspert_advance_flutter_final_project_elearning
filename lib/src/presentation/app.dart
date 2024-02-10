@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../common/constants/app_colors.dart';
 import '../data/firebase/firebase_service.dart';
 import '../data/firebase/firestore_service.dart';
+import '../data/firebase/storage_service.dart';
 import '../data/network/api_elearning.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../data/repositories/banner_repository_impl.dart';
@@ -20,6 +21,7 @@ import '../domain/usecases/get_questions_usecase.dart';
 import '../domain/usecases/get_user_by_email_usecase.dart';
 import '../domain/usecases/register_user_usecase.dart';
 import '../domain/usecases/send_message_usecase.dart';
+import '../domain/usecases/send_message_with_files_usecase.dart';
 import '../domain/usecases/sign_in_google_usecase.dart';
 import '../domain/usecases/submit_exercise_answers_usecase.dart';
 import '../domain/usecases/update_user_usecase.dart';
@@ -29,6 +31,7 @@ import 'bloc/base_screen_index/base_screen_index_bloc.dart';
 import 'bloc/courses/courses_bloc.dart';
 import 'bloc/discussion/discussion_bloc.dart';
 import 'bloc/exercises/exercises_bloc.dart';
+import 'bloc/images/images_bloc.dart';
 import 'bloc/question_answer/question_answer_bloc.dart';
 import 'bloc/question_index/question_index_bloc.dart';
 import 'bloc/questions/questions_bloc.dart';
@@ -136,20 +139,36 @@ class App extends StatelessWidget {
           create: (context) => DiscussionBloc(
             getGroupsStreamUsecase: GetGroupsStreamUsecase(
               repository: DiscussionRepositoryImpl(
-                firestoreService: FirestoreService(),
+                firestoreService: FirestoreService(
+                  storageService: StorageService(),
+                ),
               ),
             ),
             getMessagesStreamUsecase: GetMessagesStreamUsecase(
               repository: DiscussionRepositoryImpl(
-                firestoreService: FirestoreService(),
+                firestoreService: FirestoreService(
+                  storageService: StorageService(),
+                ),
               ),
             ),
             sendMessageUsecase: SendMessageUsecase(
               repository: DiscussionRepositoryImpl(
-                firestoreService: FirestoreService(),
+                firestoreService: FirestoreService(
+                  storageService: StorageService(),
+                ),
+              ),
+            ),
+            sendMessageWithFilesUsecase: SendMessageWithFilesUsecase(
+              repository: DiscussionRepositoryImpl(
+                firestoreService: FirestoreService(
+                  storageService: StorageService(),
+                ),
               ),
             ),
           ),
+        ),
+        BlocProvider(
+          create: (context) => ImagesBloc(),
         ),
       ],
       child: MaterialApp(

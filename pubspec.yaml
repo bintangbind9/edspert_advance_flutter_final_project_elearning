@@ -49,6 +49,7 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
   timeago: ^3.6.1
   image_picker: ^1.0.7
+  firebase_storage: ^11.6.5
 
 dev_dependencies:
   flutter_test:

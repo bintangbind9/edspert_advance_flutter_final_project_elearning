@@ -31,3 +31,14 @@ final class SendMessageError extends DiscussionState {
   final String message;
   SendMessageError({required this.message});
 }
+
+// Send Message with Files
+
+final class SendMessageWithFilesLoading extends DiscussionState {}
+
+final class SendMessageWithFilesSuccess extends DiscussionState {}
+
+final class SendMessageWithFilesError extends DiscussionState {
+  final String message;
+  SendMessageWithFilesError({required this.message});
+}

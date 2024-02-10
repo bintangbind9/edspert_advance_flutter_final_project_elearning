@@ -16,6 +16,7 @@ class ChatItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isHasFile = message.files!.isNotEmpty;
     bool isSender = message.email == FirebaseAuth.instance.currentUser!.email;
 
     return Padding(
@@ -31,6 +32,25 @@ class ChatItemWidget extends StatelessWidget {
               color: isSender ? AppColors.mint : Colors.black,
             ),
           ),
+          if (isHasFile)
+            Card(
+              color: isSender ? AppColors.primary : AppColors.grayscaleOffWhite,
+              child: Container(
+                padding: const EdgeInsets.all(12.0),
+                width: 200,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: message.files!.length,
+                  itemBuilder: (context, index) {
+                    String imgUrl = message.files![index];
+                    return Image.network(imgUrl);
+                  },
+                ),
+              ),
+            ),
           Card(
             color: isSender ? AppColors.primary : AppColors.grayscaleOffWhite,
             margin: const EdgeInsets.all(0),
