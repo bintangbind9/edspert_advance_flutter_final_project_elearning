@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/constants/asset_images.dart';
+import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/general_values.dart';
 import '../../bloc/banners/banners_bloc.dart';
 import '../../bloc/courses/courses_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
+import '../../widgets/profile_image_widget.dart';
 import 'banner_list_home_screen.dart';
 import 'course_list_home_screen.dart';
 import 'top_banner_home_screen.dart';
@@ -71,15 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                CircleAvatar(
-                  child: Image.network(
-                    state is GetUserAppSuccess
-                        ? (state.userModel.userFoto ?? '')
-                        : '',
-                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                      AssetImages.imgProfilePictPng,
-                    ),
-                  ),
+                ProfileImageWidget(
+                  diameter: 40,
+                  isFromFile: false,
+                  path: state is GetUserAppSuccess
+                      ? (state.userModel.userFoto ?? '')
+                      : '',
+                  foregroundColor: AppColors.grayscaleOffWhite,
+                  backgroundColor: AppColors.primary,
                 ),
               ],
             );

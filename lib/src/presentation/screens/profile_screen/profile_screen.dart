@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/constants/app_colors.dart';
-import '../../../common/constants/asset_images.dart';
 import '../../../common/constants/styles.dart';
 import '../../../common/utils/generic_dialog.dart';
 import '../../../domain/entities/user_model/user_model.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../widgets/common_button.dart';
+import '../../widgets/profile_image_widget.dart';
 import 'profile_edit_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -206,15 +206,12 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                CircleAvatar(
-                  backgroundColor: AppColors.grayscaleOffWhite,
+                ProfileImageWidget(
+                  diameter: 40,
+                  isFromFile: false,
+                  path: userModel.userFoto ?? '',
                   foregroundColor: AppColors.primary,
-                  child: Image.network(
-                    userModel.userFoto ?? '',
-                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                      AssetImages.imgProfilePictPng,
-                    ),
-                  ),
+                  backgroundColor: AppColors.grayscaleOffWhite,
                 ),
               ],
             ),
