@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/asset_images.dart';
-import '../../common/constants/general_values.dart';
-import '../../domain/entities/user_model/user_model.dart';
 import '../bloc/base_screen_index/base_screen_index_bloc.dart';
-import '../bloc/user/user_bloc.dart';
 import 'discussions/groups_screen.dart';
 import 'home_screen/home_screen.dart';
-import 'profile_screen.dart';
+import 'profile_screen/profile_screen.dart';
 
-class BaseScreen extends StatelessWidget {
-  const BaseScreen({super.key});
+class BaseScreen extends StatefulWidget {
+  final int screenIndex;
+
+  const BaseScreen({
+    super.key,
+    required this.screenIndex,
+  });
+
+  @override
+  State<BaseScreen> createState() => _BaseScreenState();
+}
+
+class _BaseScreenState extends State<BaseScreen> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<BaseScreenIndexBloc>().add(
+            BaseScreenIndexEventChange(
+              index: widget.screenIndex,
+            ),
+          );
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> baseScreen = [
-      BlocBuilder<UserBloc, UserState>(
-        buildWhen: (previous, current) =>
-            (previous is GetUserAppLoading && current is GetUserAppSuccess),
-        builder: (context, state) {
-          return HomeScreen(
-            majorName: GeneralValues.majorName,
-            userModel:
-                state is GetUserAppSuccess ? state.userModel : UserModel(),
-          );
-        },
-      ),
+      const HomeScreen(),
       const ProfileScreen(),
     ];
 

@@ -23,8 +23,29 @@ class FirebaseService {
           await FirebaseAuth.instance.signInWithCredential(credential);
       return userCredentialResult.user;
     } catch (e) {
-      debugPrint('Err signInWithGoogle $e');
+      debugPrint('Error signInWithGoogle $e');
       return null;
     }
+  }
+
+  Future<bool> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
+      return true;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('Error signOut: $e, $stackTrace');
+      }
+      return false;
+    }
+  }
+
+  String? getCurrentSignedInUserEmail() {
+    return FirebaseAuth.instance.currentUser?.email;
+  }
+
+  bool isUserSignedIn() {
+    return FirebaseAuth.instance.currentUser != null;
   }
 }

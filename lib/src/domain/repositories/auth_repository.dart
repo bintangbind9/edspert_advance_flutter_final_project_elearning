@@ -7,6 +7,12 @@ import '../entities/user_model/user_model_req.dart';
 abstract class AuthRepository {
   Future<User?> signInWithGoogle();
 
+  Future<bool> signOut();
+
+  String? getCurrentSignedInUserEmail();
+
+  bool isUserSignedIn();
+
   Future<ResponseModel<UserModel?>?> registerUser({
     required UserModelReq req,
   });

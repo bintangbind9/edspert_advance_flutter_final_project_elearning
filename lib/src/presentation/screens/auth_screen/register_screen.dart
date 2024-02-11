@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,9 +7,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/general_values.dart';
 import '../../../domain/entities/user_model/user_model_req.dart';
+import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../widgets/register_button.dart';
-import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String email;
@@ -49,18 +50,41 @@ class _RegisterPageState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-      listenWhen: (previous, current) =>
-          (previous is RegisterUserLoading && current is RegisterUserError),
-      listener: (context, state) {
-        if (state is RegisterUserError) {
-          Fluttertoast.showToast(
-            msg: state.message,
-            gravity: ToastGravity.TOP,
-            backgroundColor: AppColors.error,
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UserBloc, UserState>(
+          listenWhen: (previous, current) =>
+              (previous is RegisterUserLoading &&
+                  current is RegisterUserError) ||
+              (previous is RegisterUserLoading &&
+                  current is RegisterUserSuccess),
+          listener: (context, state) {
+            if (state is RegisterUserError) {
+              Fluttertoast.showToast(
+                msg: state.message,
+                gravity: ToastGravity.TOP,
+                backgroundColor: AppColors.error,
+              );
+            }
+
+            if (state is RegisterUserSuccess) {
+              context.read<UserBloc>().add(
+                    GetUserAppEvent(
+                      email: FirebaseAuth.instance.currentUser!.email!,
+                    ),
+                  );
+            }
+          },
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              (previous is SignOutLoading && current is SignOutSuccess) ||
+              (previous is SignOutLoading && current is SignOutError),
+          listener: (context, state) {
+            context.read<AuthBloc>().add(IsUserSignedInEvent());
+          },
+        ),
+      ],
       child: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -72,12 +96,9 @@ class _RegisterPageState extends State<RegisterScreen> {
           appBar: AppBar(
             backgroundColor: AppColors.grayscaleOffWhite,
             leading: IconButton(
-              onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ),
-              ),
+              onPressed: () {
+                context.read<AuthBloc>().add(SignOutEvent());
+              },
               color: Colors.black,
               icon: const Icon(Icons.arrow_back),
             ),

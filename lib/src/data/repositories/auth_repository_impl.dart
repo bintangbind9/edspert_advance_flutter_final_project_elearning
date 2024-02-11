@@ -29,6 +29,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  String? getCurrentSignedInUserEmail() {
+    return firebaseService.getCurrentSignedInUserEmail();
+  }
+
+  @override
+  bool isUserSignedIn() {
+    return firebaseService.isUserSignedIn();
+  }
+
+  @override
+  Future<bool> signOut() async {
+    return await firebaseService.signOut();
+  }
+
+  @override
   Future<ResponseModel<UserModel?>?> getUserByEmail({
     required String email,
   }) async {

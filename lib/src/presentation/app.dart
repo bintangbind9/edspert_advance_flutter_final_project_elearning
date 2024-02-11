@@ -19,10 +19,12 @@ import '../domain/usecases/get_groups_stream_usecase.dart';
 import '../domain/usecases/get_messages_stream_usecase.dart';
 import '../domain/usecases/get_questions_usecase.dart';
 import '../domain/usecases/get_user_by_email_usecase.dart';
+import '../domain/usecases/is_user_signed_in_usecase.dart';
 import '../domain/usecases/register_user_usecase.dart';
 import '../domain/usecases/send_message_usecase.dart';
 import '../domain/usecases/send_message_with_files_usecase.dart';
 import '../domain/usecases/sign_in_google_usecase.dart';
+import '../domain/usecases/sign_out_usecase.dart';
 import '../domain/usecases/submit_exercise_answers_usecase.dart';
 import '../domain/usecases/update_user_usecase.dart';
 import 'bloc/auth/auth_bloc.dart';
@@ -59,7 +61,19 @@ class App extends StatelessWidget {
                 apiElearning: ApiElearning(),
               ),
             ),
-          ),
+            signOutUsecase: SignOutUsecase(
+              repository: AuthRepositoryImpl(
+                firebaseService: FirebaseService(),
+                apiElearning: ApiElearning(),
+              ),
+            ),
+            isUserSignedInUsecase: IsUserSignedInUsecase(
+              repository: AuthRepositoryImpl(
+                firebaseService: FirebaseService(),
+                apiElearning: ApiElearning(),
+              ),
+            ),
+          )..add(IsUserSignedInEvent()),
         ),
         BlocProvider(
           create: (context) => CoursesBloc(
@@ -181,9 +195,15 @@ class App extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
-        home: FirebaseAuth.instance.currentUser == null
-            ? const LoginScreen()
-            : BlocBuilder<UserBloc, UserState>(
+        home: BlocBuilder<AuthBloc, AuthState>(
+          buildWhen: (previous, current) =>
+              (previous is IsUserSignedInLoading &&
+                  current is IsUserSignedInTrue) ||
+              (previous is IsUserSignedInLoading &&
+                  current is IsUserSignedInFalse),
+          builder: (context, state) {
+            if (state is IsUserSignedInTrue) {
+              return BlocBuilder<UserBloc, UserState>(
                 buildWhen: (previous, current) =>
                     (previous is GetUserAppLoading &&
                         current is GetUserAppSuccess) ||
@@ -191,15 +211,21 @@ class App extends StatelessWidget {
                         current is GetUserAppApiError),
                 builder: (context, state) {
                   if (state is GetUserAppSuccess) {
-                    return const BaseScreen();
+                    return const BaseScreen(screenIndex: 0);
                   } else if (state is GetUserAppApiError) {
                     return RegisterScreen(
-                        email: FirebaseAuth.instance.currentUser!.email!);
+                      email: FirebaseAuth.instance.currentUser!.email!,
+                    );
                   } else {
                     return const SplashScreen();
                   }
                 },
-              ),
+              );
+            } else {
+              return const LoginScreen();
+            }
+          },
+        ),
       ),
     );
   }

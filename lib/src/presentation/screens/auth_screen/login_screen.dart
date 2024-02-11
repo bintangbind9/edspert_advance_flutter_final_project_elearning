@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,8 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/asset_images.dart';
 import '../../bloc/auth/auth_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../widgets/social_login_button.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -19,21 +20,17 @@ class LoginScreen extends StatelessWidget {
           (previous is SignInWithGoogleLoading &&
               current is SignInWithGoogleSuccess) ||
           (previous is SignInWithGoogleLoading &&
-              current is SignInWithGoogleError),
+              current is SignInWithGoogleError) ||
+          (previous is IsUserSignedInLoading &&
+              current is IsUserSignedInTrue) ||
+          (previous is IsUserSignedInLoading && current is IsUserSignedInFalse),
       listener: (context, state) {
         if (state is SignInWithGoogleSuccess) {
           Fluttertoast.showToast(
             msg: "Signed in using ${state.email}",
             gravity: ToastGravity.TOP,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RegisterScreen(
-                email: state.email,
-              ),
-            ),
-          );
+          context.read<AuthBloc>().add(IsUserSignedInEvent());
         }
 
         if (state is SignInWithGoogleError) {
@@ -42,6 +39,14 @@ class LoginScreen extends StatelessWidget {
             gravity: ToastGravity.TOP,
             backgroundColor: AppColors.error,
           );
+        }
+
+        if (state is IsUserSignedInTrue) {
+          context.read<UserBloc>().add(
+                GetUserAppEvent(
+                  email: FirebaseAuth.instance.currentUser!.email!,
+                ),
+              );
         }
       },
       child: Scaffold(
