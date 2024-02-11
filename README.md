@@ -4,19 +4,19 @@ An E-Learning App made with Flutter ♥️
 
 ## Library
 
-dio
-flutter_bloc
-flutter_svg
-form_builder_validators
-firebase_core
-firebase_auth
-google_sign_in
-cloud_firestore
-fluttertoast
-flutter_widget_from_html
-timeago
-image_picker
-firebase_storage
+dio,
+flutter_bloc,
+flutter_svg,
+form_builder_validators,
+firebase_core,
+firebase_auth,
+google_sign_in,
+cloud_firestore,
+fluttertoast,
+flutter_widget_from_html,
+timeago,
+image_picker,
+firebase_storage.
 
 ## Get Help
 
