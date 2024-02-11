@@ -1,15 +1,24 @@
 # edspert_advance_flutter_final_project_elearning
 
-A new Flutter project.
+An E-Learning App made with Flutter ♥️
 
-## Getting Started
+## Library
 
-This project is a starting point for a Flutter application.
+dio
+flutter_bloc
+flutter_svg
+form_builder_validators
+firebase_core
+firebase_auth
+google_sign_in
+cloud_firestore
+fluttertoast
+flutter_widget_from_html
+timeago
+image_picker
+firebase_storage
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Get Help
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
