@@ -5,7 +5,7 @@ class UserModelReq {
   final String kelas;
   final String gender;
   final String jenjang;
-  final String? foto;
+  String? foto;
 
   UserModelReq({
     required this.namaLengkap,

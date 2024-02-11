@@ -11,6 +11,7 @@ import '../data/repositories/auth_repository_impl.dart';
 import '../data/repositories/banner_repository_impl.dart';
 import '../data/repositories/course_repository_impl.dart';
 import '../data/repositories/discussion_repository_impl.dart';
+import '../data/repositories/storage_repository_impl.dart';
 import '../domain/usecases/get_banners_usecase.dart';
 import '../domain/usecases/get_courses_usecase.dart';
 import '../domain/usecases/get_exercise_result_usecase.dart';
@@ -27,6 +28,8 @@ import '../domain/usecases/sign_in_google_usecase.dart';
 import '../domain/usecases/sign_out_usecase.dart';
 import '../domain/usecases/submit_exercise_answers_usecase.dart';
 import '../domain/usecases/update_user_usecase.dart';
+import '../domain/usecases/upload_file_usecase.dart';
+import '../domain/usecases/upload_files_usecase.dart';
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/banners/banners_bloc.dart';
 import 'bloc/base_screen_index/base_screen_index_bloc.dart';
@@ -37,6 +40,7 @@ import 'bloc/images/images_bloc.dart';
 import 'bloc/question_answer/question_answer_bloc.dart';
 import 'bloc/question_index/question_index_bloc.dart';
 import 'bloc/questions/questions_bloc.dart';
+import 'bloc/storage/storage_bloc.dart';
 import 'bloc/user/user_bloc.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/auth_screen/register_screen.dart';
@@ -183,6 +187,20 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ImagesBloc(),
+        ),
+        BlocProvider(
+          create: (context) => StorageBloc(
+            uploadFileUsecase: UploadFileUsecase(
+              repository: StorageRepositoryImpl(
+                storageService: StorageService(),
+              ),
+            ),
+            uploadFilesUsecase: UploadFilesUsecase(
+              repository: StorageRepositoryImpl(
+                storageService: StorageService(),
+              ),
+            ),
+          ),
         ),
       ],
       child: MaterialApp(

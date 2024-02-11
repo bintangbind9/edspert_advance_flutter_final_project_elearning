@@ -8,6 +8,7 @@ class GeneralValues {
   static const String defaultJenjang = 'SMA';
   static const String defaultPhotoURL = 'url_foto';
   static const String testingEmail = 'testerngbayu@gmail.com';
+  static const List<String> schoolGrades = ['10', '11', '12'];
   static const Map<StoragePath, String> storagePath = {
     StoragePath.profilePict: "profile_pictures",
     StoragePath.chatImage: "chat_images",

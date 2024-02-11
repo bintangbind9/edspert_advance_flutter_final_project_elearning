@@ -1,11 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../common/constants/app_colors.dart';
+import '../../../common/constants/general_values.dart';
 import '../../../domain/entities/user_model/user_model.dart';
+import '../../../domain/entities/user_model/user_model_req.dart';
+import '../../../domain/usecases/upload_file_usecase.dart';
 import '../../bloc/images/images_bloc.dart';
+import '../../bloc/storage/storage_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../widgets/common_button.dart';
 import '../../widgets/profile_image_widget.dart';
 
@@ -28,11 +35,20 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final schoolGradeTextController = TextEditingController();
   final schoolNameTextController = TextEditingController();
 
+  late UserModelReq _req;
+
   @override
   void initState() {
+    fullNameTextController.text = widget.userModel.userName ?? '';
+    emailTextController.text = widget.userModel.userEmail ?? '';
+    genderTextController.text = widget.userModel.userGender ?? '';
+    schoolGradeTextController.text = widget.userModel.kelas ?? '';
+    schoolNameTextController.text = widget.userModel.userAsalSekolah ?? '';
+
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<ImagesBloc>().add(SetImagesEvent(files: const []));
     });
+
     super.initState();
   }
 
@@ -50,18 +66,105 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     context.read<ImagesBloc>().add(PickImageEvent(imageSource: imageSource));
   }
 
+  updateUser(UserModelReq req) {
+    context.read<UserBloc>().add(UpdateUserEvent(req: req));
+  }
+
+  getUserAppEvent() {
+    context
+        .read<UserBloc>()
+        .add(GetUserAppEvent(email: FirebaseAuth.instance.currentUser!.email!));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.focusedChild?.unfocus();
-        }
-      },
-      child: Scaffold(
-        appBar: buildAppBar(context),
-        body: buildBody(context),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<StorageBloc, StorageState>(
+          listenWhen: (previous, current) =>
+              (previous is StorageInitial && current is UploadFileLoading) ||
+              (previous is UploadFileLoading && current is UploadFileSuccess) ||
+              (previous is UploadFileLoading && current is UploadFileError),
+          listener: (context, state) {
+            if (state is UploadFileSuccess) {
+              UserModelReq req = _req;
+              req.foto = state.downloadUrl;
+
+              setState(() {
+                _req = req;
+              });
+
+              updateUser(_req);
+            }
+
+            if (state is UploadFileError) {
+              Fluttertoast.showToast(msg: state.message);
+            }
+          },
+        ),
+        BlocListener<UserBloc, UserState>(
+          listenWhen: (previous, current) =>
+              (previous is UpdateUserLoading && current is UpdateUserSuccess) ||
+              (previous is UpdateUserLoading &&
+                  current is UpdateUserApiError) ||
+              (previous is UpdateUserLoading &&
+                  current is UpdateUserInternalError),
+          listener: (context, state) {
+            if (state is UpdateUserSuccess) {
+              Fluttertoast.showToast(msg: 'Berhasil Perbarui Data');
+              getUserAppEvent();
+            }
+            if (state is UpdateUserApiError) {
+              Fluttertoast.showToast(msg: state.message);
+            }
+            if (state is UpdateUserInternalError) {
+              Fluttertoast.showToast(msg: state.message);
+            }
+          },
+        ),
+      ],
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.focusedChild?.unfocus();
+          }
+        },
+        child: Scaffold(
+          appBar: buildAppBar(context),
+          body: BlocBuilder<UserBloc, UserState>(
+            buildWhen: (previous, current) =>
+                (previous is UserInitial && current is UpdateUserLoading) ||
+                (previous is UpdateUserLoading &&
+                    current is UpdateUserSuccess) ||
+                (previous is UpdateUserLoading &&
+                    current is UpdateUserApiError) ||
+                (previous is UpdateUserLoading &&
+                    current is UpdateUserInternalError),
+            builder: (context, state) {
+              if (state is UpdateUserLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return BlocBuilder<StorageBloc, StorageState>(
+                buildWhen: (previous, current) =>
+                    (previous is StorageInitial &&
+                        current is UploadFileLoading) ||
+                    (previous is UploadFileLoading &&
+                        current is UploadFileSuccess) ||
+                    (previous is UploadFileLoading &&
+                        current is UploadFileError),
+                builder: (context, state) {
+                  if (state is UploadFileLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  return buildBody(context);
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -193,19 +296,74 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          onTap: () {},
+          onTap: () async {
+            String? gender = await showModalBottomSheet<String>(
+              context: context,
+              builder: (context) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 120,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: const Text(GeneralValues.genderM),
+                        trailing: const Icon(Icons.male),
+                        onTap: () =>
+                            Navigator.of(context).pop(GeneralValues.genderM),
+                      ),
+                      ListTile(
+                        title: const Text(GeneralValues.genderF),
+                        trailing: const Icon(Icons.female),
+                        onTap: () =>
+                            Navigator.of(context).pop(GeneralValues.genderF),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+
+            if (gender != null) {
+              genderTextController.text = gender;
+            }
+          },
         ),
         const SizedBox(
           height: 16,
         ),
         TextField(
+          readOnly: true,
           controller: schoolGradeTextController,
           decoration: InputDecoration(
+            suffixIcon: const Icon(Icons.arrow_drop_down),
             labelText: 'Kelas',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
             ),
           ),
+          onTap: () async {
+            String? schoolGrade = await showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: GeneralValues.schoolGrades.length,
+                  itemBuilder: (context, index) {
+                    String grade = GeneralValues.schoolGrades[index];
+                    return ListTile(
+                      title: Text('Kelas $grade'),
+                      onTap: () => Navigator.of(context).pop(grade),
+                      trailing: const Icon(Icons.class_outlined),
+                    );
+                  },
+                );
+              },
+            );
+
+            if (schoolGrade != null) {
+              schoolGradeTextController.text = schoolGrade;
+            }
+          },
         ),
         const SizedBox(
           height: 16,
@@ -220,21 +378,45 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
         ),
         const SizedBox(height: 26),
-        CommonButton(
-          onPressed: () {
-            // return await controller.updateData(
-            //   UserRegistrationRequest(
-            //     fullName: controller.fullNameTextController.text,
-            //     email: controller.emailTextController.text,
-            //     gender: controller.etGender.text,
-            //     schoolGrade: controller.schoolGradeTextController.text,
-            //     schoolName: controller.schoolNameTextController.text,
-            //     schoolLevel: GeneralValues.defaultJenjang,
-            //     photoUrl: GeneralValues.defaultPhotoURL,
-            //   ),
-            // );
+        BlocBuilder<ImagesBloc, ImagesState>(
+          buildWhen: (previous, current) =>
+              (previous is ImagesInitial && current is ImagesDone),
+          builder: (context, state) {
+            return CommonButton(
+              onPressed: () async {
+                setState(() {
+                  _req = UserModelReq(
+                    namaLengkap: fullNameTextController.text,
+                    email: emailTextController.text,
+                    namaSekolah: schoolNameTextController.text,
+                    kelas: schoolGradeTextController.text,
+                    gender: genderTextController.text,
+                    jenjang: GeneralValues.defaultJenjang,
+                    foto: widget.userModel.userFoto,
+                  );
+                });
+
+                if (state is ImagesDone && state.files.isNotEmpty) {
+                  final String fileExt = state.files[0].path.split('.').last;
+                  final String fileName =
+                      '${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+
+                  context.read<StorageBloc>().add(
+                        UploadFileEvent(
+                          params: UploadFileParams(
+                            fileName: fileName,
+                            fileByte: await state.files[0].readAsBytes(),
+                            storagePath: StoragePath.profilePict,
+                          ),
+                        ),
+                      );
+                } else {
+                  updateUser(_req);
+                }
+              },
+              text: 'Perbarui Data',
+            );
           },
-          text: 'Perbarui Data',
         ),
       ],
     );

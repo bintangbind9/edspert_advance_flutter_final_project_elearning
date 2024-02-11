@@ -83,6 +83,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     on<UpdateUserEvent>((event, emit) async {
+      emit(UserInitial());
       emit(UpdateUserLoading());
 
       final ResponseModel<UserModel?>? responseModel =
